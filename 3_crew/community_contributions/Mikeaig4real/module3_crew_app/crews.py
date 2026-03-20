@@ -1,28 +1,23 @@
-"""Crew factories for Module 3 app."""
+"""Crew factories that converge single-purpose sub-agents."""
 
-from crewai import Agent, Crew, Process, Task
+from crewai import Crew, Process, Task
+
+from sub_agents.debate_pro_agent import build_debate_pro_agent
+from sub_agents.debate_con_agent import build_debate_con_agent
+from sub_agents.debate_moderator_agent import build_debate_moderator_agent
+from sub_agents.engineering_architect_agent import build_engineering_architect_agent
+from sub_agents.engineering_qa_agent import build_engineering_qa_agent
+from sub_agents.engineering_delivery_agent import build_engineering_delivery_agent
+from sub_agents.financial_market_agent import build_financial_market_agent
+from sub_agents.financial_fundamental_agent import build_financial_fundamental_agent
+from sub_agents.financial_reviewer_agent import build_financial_reviewer_agent
 
 
 def build_debate_crew(topic: str) -> Crew:
-    """Create a debate crew for a given topic."""
-    pro = Agent(
-        role="Pro Analyst",
-        goal=f"Argue in favor of: {topic}",
-        backstory="You prioritize practical upside and delivery outcomes.",
-        verbose=False,
-    )
-    con = Agent(
-        role="Con Analyst",
-        goal=f"Argue against premature adoption of: {topic}",
-        backstory="You identify operational and strategic risk early.",
-        verbose=False,
-    )
-    judge = Agent(
-        role="Moderator",
-        goal="Synthesize both sides and provide a balanced recommendation.",
-        backstory="You produce concise decision memos for leaders.",
-        verbose=False,
-    )
+    """Converge debate sub-agents into one crew."""
+    pro = build_debate_pro_agent(topic)
+    con = build_debate_con_agent(topic)
+    judge = build_debate_moderator_agent()
 
     pro_task = Task(description="Provide 5 concise pro points.", expected_output="5 pro bullet points.", agent=pro)
     con_task = Task(description="Provide 5 concise risk points.", expected_output="5 risk bullet points.", agent=con)
@@ -42,25 +37,10 @@ def build_debate_crew(topic: str) -> Crew:
 
 
 def build_engineering_crew(problem: str) -> Crew:
-    """Create an engineering planning crew for a feature request."""
-    architect = Agent(
-        role="Software Architect",
-        goal=f"Design a robust implementation for: {problem}",
-        backstory="You design practical systems with clear boundaries.",
-        verbose=False,
-    )
-    qa = Agent(
-        role="QA Lead",
-        goal="Define acceptance criteria and key edge cases.",
-        backstory="You prevent production regressions with precise test planning.",
-        verbose=False,
-    )
-    planner = Agent(
-        role="Delivery Manager",
-        goal="Create a sprint-ready delivery plan.",
-        backstory="You convert technical plans into actionable milestones.",
-        verbose=False,
-    )
+    """Converge engineering sub-agents into one crew."""
+    architect = build_engineering_architect_agent(problem)
+    qa = build_engineering_qa_agent()
+    planner = build_engineering_delivery_agent()
 
     design_task = Task(
         description="Write architecture outline, modules, APIs, and deployment considerations.",
@@ -89,25 +69,10 @@ def build_engineering_crew(problem: str) -> Crew:
 
 
 def build_financial_crew(universe: str) -> Crew:
-    """Create a financial research crew for a ticker universe."""
-    researcher = Agent(
-        role="Market Researcher",
-        goal=f"Summarize macro and sector context for: {universe}",
-        backstory="You produce concise market context with caveats.",
-        verbose=False,
-    )
-    analyst = Agent(
-        role="Fundamental Analyst",
-        goal="Compare growth, profitability, and valuation tradeoffs.",
-        backstory="You prioritize transparent assumptions.",
-        verbose=False,
-    )
-    reviewer = Agent(
-        role="Portfolio Reviewer",
-        goal="Give a balanced recommendation and risk controls.",
-        backstory="You avoid overconfident conclusions.",
-        verbose=False,
-    )
+    """Converge financial sub-agents into one crew."""
+    researcher = build_financial_market_agent(universe)
+    analyst = build_financial_fundamental_agent()
+    reviewer = build_financial_reviewer_agent()
 
     market_task = Task(
         description="Summarize environment and sector trends that matter now.",

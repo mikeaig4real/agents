@@ -1,11 +1,20 @@
 # Module 2 Research App
 
-This folder applies the deep-research modular pattern used in `2_openai/deep_research/`.
+This implementation follows the deep-research module pattern:
+
+- one sub-agent per file
+- one converged lead agent
+- one manager file that runs the lead agent
+- one Gradio app file for UI
 
 ## Structure
-- `agents.py` - agent and schema definitions
-- `manager.py` - orchestration pipeline
-- `app.py` - Gradio interface
+- `sub_agents/planner_agent.py`
+- `sub_agents/search_agent.py`
+- `sub_agents/writer_agent.py`
+- `sub_agents/email_agent.py`
+- `lead_agent.py` (converged agent)
+- `manager.py` (execution)
+- `app.py` (Gradio interface)
 
 ## Run
 ```bash
